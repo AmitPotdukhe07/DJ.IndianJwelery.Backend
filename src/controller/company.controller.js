@@ -1,5 +1,6 @@
+import mongoose from "mongoose";
 import Company from "../model/Company.model.js";
-
+import nodemailer from 'nodemailer'
 export const createCompanyData = async (req, res) => {
     try {
         const companyDataArray = req.body;
@@ -23,6 +24,69 @@ export const createCompanyData = async (req, res) => {
         });
     }
 };
+
+export const getProduct = async (req, res) => {
+    try {
+        const { id } = req.params
+        var results = []
+        results = await Company.findById(id);
+        console.log(results);
+        res.status(200).json({
+            success: true,
+            results
+        });
+    } catch (err) {
+        console.log(results);
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            message: "Error retrieving company",
+            error: err.message
+        });
+    }
+
+
+}
+
+export const sendEnquiry = async (req, res) => {
+    try {
+        const { enquiry } = req.body;
+
+        const htmlBody = `<div>
+                            <p>${enquiry}</p>
+                        </div>`
+
+        let mailTransporter = nodemailer.createTransport({
+            auth: {
+                pass: "zgreopguooncrivc",
+                user: "amit.potdukhe07@gmail.com"
+            },
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false,
+        });
+
+        const mailOptions = {
+            from: "amit.potdukhe07@gmail.com",
+            html: `${htmlBody}`,
+            subject: `Enquiry`,
+            to: `potdukheamit@gmail.com`,
+        };
+
+        const res1 = await mailTransporter.sendMail(mailOptions);
+        console.log(res1);
+        res.status(200).json({
+            success: true
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Error retrieving company",
+            error: error.message
+        });
+    }
+}
 
 export const search = async (req, res) => {
     try {
