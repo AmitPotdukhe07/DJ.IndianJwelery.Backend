@@ -1,4 +1,4 @@
-import User from './model/User.model.js';
+import User from '../model/UserModel.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
@@ -13,7 +13,7 @@ export const signUp = async (req, res) => {
         if (existingUser) {
             return res
                 .status(400)
-                .json({ msg: "User with same email or mobile already exists!" });
+                .json({ msg: "User with same email already exists!" });
         }
 
         let user = new User({
@@ -42,7 +42,6 @@ export const signUp = async (req, res) => {
 export const signIn = async (req, res) => {
     try {
         const { email, password } = req.body;
-        logger.info(`user signin: ${JSON.stringify(req.body)}`);
         const user = await User.findOne({ email });
         if (!user) {
             return res

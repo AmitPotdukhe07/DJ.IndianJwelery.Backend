@@ -1,10 +1,14 @@
 import express from 'express';
-import { signUp, signIn } from '../controllers/user.controller.js';
+import { signUp, signIn } from './controller/user.controller.js';
 import { userAuth } from './middleware/auth.middleware.js';
-import { emailValidationRules, validate } from '../utils/validate.js';
-const userRouter = express.Router();
+import { createCompanyData, search } from './controller/company.controller.js';
+// import { emailValidationRules, validate } from '../utils/validate.js';
+const routes = express.Router();
 
-userRouter.post("/user/signup", emailValidationRules, validate, signUp)
-userRouter.post("/user/signin", signIn)
+routes.post("/user/signup", signUp)
+routes.post("/user/signin", signIn)
 
-export default userRouter
+routes.post("/company", createCompanyData);
+routes.get("/search", search)
+
+export default routes
